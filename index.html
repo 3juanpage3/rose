@@ -1,133 +1,154 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Glowing Neon Red Rose</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: #000000;
-            color: #ffffff;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            overflow: hidden;
-            user-select: none;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000000;
+        color: #ffffff;
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        overflow: hidden;
+        user-select: none;
+      }
 
-        canvas {
-            display: block;
-            width: 100vw;
-            height: 100vh;
-            touch-action: none;
-        }
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+        touch-action: none;
+      }
 
-        /* Glassmorphism Control Panel */
-        .glass-panel {
-            background: rgba(8, 2, 5, 0.82);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 30, 70, 0.25);
-            box-shadow: 0 15px 50px 0 rgba(255, 0, 50, 0.25), inset 0 0 20px rgba(255, 0, 50, 0.08);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-        }
+      /* Glassmorphism Control Panel */
+      .glass-panel {
+        background: rgba(8, 2, 5, 0.82);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 30, 70, 0.25);
+        box-shadow:
+          0 15px 50px 0 rgba(255, 0, 50, 0.25),
+          inset 0 0 20px rgba(255, 0, 50, 0.08);
+        transition:
+          transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          opacity 0.4s ease;
+      }
 
-        .glass-panel.collapsed {
-            transform: translateY(calc(100% + 20px));
-            opacity: 0;
-            pointer-events: none;
-        }
+      .glass-panel.collapsed {
+        transform: translateY(calc(100% + 20px));
+        opacity: 0;
+        pointer-events: none;
+      }
 
-        .neon-btn {
-            background: rgba(255, 0, 50, 0.12);
-            border: 1px solid rgba(255, 50, 80, 0.35);
-            color: #ff4d79;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+      .neon-btn {
+        background: rgba(255, 0, 50, 0.12);
+        border: 1px solid rgba(255, 50, 80, 0.35);
+        color: #ff4d79;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
-        .neon-btn:hover {
-            background: rgba(255, 0, 60, 0.35);
-            border-color: #ff0844;
-            color: #ffffff;
-            box-shadow: 0 0 20px rgba(255, 0, 68, 0.7);
-            transform: translateY(-1px);
-        }
+      .neon-btn:hover {
+        background: rgba(255, 0, 60, 0.35);
+        border-color: #ff0844;
+        color: #ffffff;
+        box-shadow: 0 0 20px rgba(255, 0, 68, 0.7);
+        transform: translateY(-1px);
+      }
 
-        .neon-btn:active {
-            transform: translateY(1px);
-        }
+      .neon-btn:active {
+        transform: translateY(1px);
+      }
 
-        .neon-btn.active {
-            background: rgba(255, 0, 60, 0.4);
-            border-color: #ff3366;
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(255, 0, 68, 0.5);
-        }
+      .neon-btn.active {
+        background: rgba(255, 0, 60, 0.4);
+        border-color: #ff3366;
+        color: #ffffff;
+        box-shadow: 0 0 15px rgba(255, 0, 68, 0.5);
+      }
 
-        /* Custom Color Swatch Buttons */
-        .color-swatch {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
+      /* Custom Color Swatch Buttons */
+      .color-swatch {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      }
 
-        .color-swatch:hover {
-            transform: scale(1.25);
-        }
+      .color-swatch:hover {
+        transform: scale(1.25);
+      }
 
-        .color-swatch.active {
-            border-color: #ffffff;
-            transform: scale(1.3);
-            box-shadow: 0 0 12px currentColor;
-        }
+      .color-swatch.active {
+        border-color: #ffffff;
+        transform: scale(1.3);
+        box-shadow: 0 0 12px currentColor;
+      }
 
-        /* Custom Slider Styling */
-        input[type=range] {
-            -webkit-appearance: none;
-            background: rgba(255, 0, 50, 0.25);
-            border-radius: 6px;
-            height: 5px;
-        }
+      /* Custom Slider Styling */
+      input[type="range"] {
+        -webkit-appearance: none;
+        background: rgba(255, 0, 50, 0.25);
+        border-radius: 6px;
+        height: 5px;
+      }
 
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 15px;
-            width: 15px;
-            border-radius: 50%;
-            background: #ff0844;
-            cursor: pointer;
-            box-shadow: 0 0 12px #ff0844;
-            transition: transform 0.1s ease;
-        }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 15px;
+        width: 15px;
+        border-radius: 50%;
+        background: #ff0844;
+        cursor: pointer;
+        box-shadow: 0 0 12px #ff0844;
+        transition: transform 0.1s ease;
+      }
 
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.25);
-        }
+      input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.25);
+      }
 
-        /* Ambient Radial Background Glow */
-        .ambient-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80vw;
-            height: 80vh;
-            background: radial-gradient(circle, rgba(255, 0, 60, 0.18) 0%, rgba(160, 0, 40, 0.08) 40%, rgba(0,0,0,0) 75%);
-            pointer-events: none;
-            border-radius: 50%;
-            filter: blur(70px);
-            z-index: 0;
-            transition: opacity 0.5s ease, background 0.5s ease;
-        }
+      /* Ambient Radial Background Glow */
+      .ambient-glow {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 80vw;
+        height: 80vh;
+        background: radial-gradient(
+          circle,
+          rgba(255, 0, 60, 0.18) 0%,
+          rgba(160, 0, 40, 0.08) 40%,
+          rgba(0, 0, 0, 0) 75%
+        );
+        pointer-events: none;
+        border-radius: 50%;
+        filter: blur(70px);
+        z-index: 0;
+        transition:
+          opacity 0.5s ease,
+          background 0.5s ease;
+      }
     </style>
-</head>
-<body class="relative w-screen h-screen bg-black flex flex-col justify-between items-center overflow-hidden">
-
+  </head>
+  <body
+    class="relative w-screen h-screen bg-black flex flex-col justify-between items-center overflow-hidden"
+  >
     <!-- Ambient background light aura -->
     <div class="ambient-glow" id="ambientHalo"></div>
 
@@ -135,608 +156,858 @@
     <canvas id="roseCanvas" class="relative z-10 cursor-crosshair"></canvas>
 
     <!-- Header Overlay -->
-    <div class="absolute top-6 left-1/2 transform -translate-x-1/2 z-20 text-center pointer-events-none w-11/12 max-w-lg">
-        <h1 id="roseTitle" class="text-xl md:text-3xl font-extralight tracking-[0.28em] text-red-500 uppercase drop-shadow-[0_0_20px_rgba(255,0,60,0.95)] transition-colors duration-500">
-            Hyperion Neon Rose
-        </h1>
-        <p class="text-[10px] md:text-xs text-red-300/70 tracking-widest mt-1 font-mono">Parametric Curve Engine • Interactive Spark Physics</p>
+    <div
+      class="absolute top-6 left-1/2 transform -translate-x-1/2 z-20 text-center pointer-events-none w-11/12 max-w-lg"
+    >
+      <h1
+        id="roseTitle"
+        class="text-xl md:text-3xl font-extralight tracking-[0.28em] text-red-500 uppercase drop-shadow-[0_0_20px_rgba(255,0,60,0.95)] transition-colors duration-500"
+      >
+        Hyperion Neon Rose
+      </h1>
+      <p
+        class="text-[10px] md:text-xs text-red-300/70 tracking-widest mt-1 font-mono"
+      >
+        Parametric Curve Engine • Interactive Spark Physics
+      </p>
     </div>
 
     <!-- HUD Control Panel Toggle Button -->
-    <button id="toggleHudBtn" class="absolute top-6 right-6 z-30 neon-btn p-3 rounded-full flex items-center justify-center shadow-lg" title="Toggle Controls">
-        <i class="fa-solid fa-sliders text-sm"></i>
+    <button
+      id="toggleHudBtn"
+      class="absolute top-6 right-6 z-30 neon-btn p-3 rounded-full flex items-center justify-center shadow-lg"
+      title="Toggle Controls"
+    >
+      <i class="fa-solid fa-sliders text-sm"></i>
     </button>
 
     <!-- Bottom HUD Glass Panel -->
     <div class="absolute bottom-6 z-20 w-11/12 max-w-4xl">
-        <div id="hudPanel" class="glass-panel rounded-2xl p-4 md:p-5 flex flex-col gap-4">
-            
-            <!-- Row 1: Actions & Palette Picker -->
-            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-red-500/20 pb-3">
-                
-                <div class="flex items-center gap-2 flex-wrap">
-                    <button id="replayBtn" class="neon-btn px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-play text-xs"></i>
-                        <span>Replay</span>
-                    </button>
+      <div
+        id="hudPanel"
+        class="glass-panel rounded-2xl p-4 md:p-5 flex flex-col gap-4"
+      >
+        <!-- Row 1: Actions & Palette Picker -->
+        <div
+          class="flex flex-wrap items-center justify-between gap-4 border-b border-red-500/20 pb-3"
+        >
+          <div class="flex items-center gap-2 flex-wrap">
+            <button
+              id="replayBtn"
+              class="neon-btn px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2"
+            >
+              <i class="fa-solid fa-play text-xs"></i>
+              <span>Replay</span>
+            </button>
 
-                    <button id="pulseBtn" class="neon-btn active px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-heart-pulse text-xs"></i>
-                        <span id="pulseStatus">Pulse: ON</span>
-                    </button>
+            <button
+              id="pulseBtn"
+              class="neon-btn active px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2"
+            >
+              <i class="fa-solid fa-heart-pulse text-xs"></i>
+              <span id="pulseStatus">Pulse: ON</span>
+            </button>
 
-                    <button id="particlesBtn" class="neon-btn active px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
-                        <span id="particlesStatus">Embers: ON</span>
-                    </button>
+            <button
+              id="particlesBtn"
+              class="neon-btn active px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2"
+            >
+              <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+              <span id="particlesStatus">Embers: ON</span>
+            </button>
 
-                    <button id="exportBtn" class="neon-btn px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2">
-                        <i class="fa-solid fa-camera text-xs"></i>
-                        <span>PNG</span>
-                    </button>
-                </div>
+            <button
+              id="exportBtn"
+              class="neon-btn px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-2"
+            >
+              <i class="fa-solid fa-camera text-xs"></i>
+              <span>PNG</span>
+            </button>
+          </div>
 
-                <!-- Palette Swatches -->
-                <div class="flex items-center gap-2.5">
-                    <span class="text-xs text-red-200/70 font-mono mr-1">Color:</span>
-                    <div class="color-swatch active bg-red-600" data-theme="red" title="Neon Red"></div>
-                    <div class="color-swatch bg-pink-500" data-theme="pink" title="Cyberpunk Pink"></div>
-                    <div class="color-swatch bg-amber-400" data-theme="gold" title="Crimson Gold"></div>
-                    <div class="color-swatch bg-cyan-400" data-theme="blue" title="Electric Blue"></div>
-                    <div class="color-swatch bg-emerald-400" data-theme="green" title="Emerald Green"></div>
-                </div>
-
-            </div>
-
+          <!-- Palette Swatches -->
+          <div class="flex items-center gap-2.5">
+            <span class="text-xs text-red-200/70 font-mono mr-1">Color:</span>
+            <div
+              class="color-swatch active bg-red-600"
+              data-theme="red"
+              title="Neon Red"
+            ></div>
+            <div
+              class="color-swatch bg-pink-500"
+              data-theme="pink"
+              title="Cyberpunk Pink"
+            ></div>
+            <div
+              class="color-swatch bg-amber-400"
+              data-theme="gold"
+              title="Crimson Gold"
+            ></div>
+            <div
+              class="color-swatch bg-cyan-400"
+              data-theme="blue"
+              title="Electric Blue"
+            ></div>
+            <div
+              class="color-swatch bg-emerald-400"
+              data-theme="green"
+              title="Emerald Green"
+            ></div>
+          </div>
         </div>
+      </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('roseCanvas');
-        const ctx = canvas.getContext('2d');
-        const replayBtn = document.getElementById('replayBtn');
-        const pulseBtn = document.getElementById('pulseBtn');
-        const pulseStatus = document.getElementById('pulseStatus');
-        const particlesBtn = document.getElementById('particlesBtn');
-        const particlesStatus = document.getElementById('particlesStatus');
-        const exportBtn = document.getElementById('exportBtn');
-        const toggleHudBtn = document.getElementById('toggleHudBtn');
-        const hudPanel = document.getElementById('hudPanel');
-        const ambientHalo = document.getElementById('ambientHalo');
-        const roseTitle = document.getElementById('roseTitle');
+      const canvas = document.getElementById("roseCanvas");
+      const ctx = canvas.getContext("2d");
+      const replayBtn = document.getElementById("replayBtn");
+      const pulseBtn = document.getElementById("pulseBtn");
+      const pulseStatus = document.getElementById("pulseStatus");
+      const particlesBtn = document.getElementById("particlesBtn");
+      const particlesStatus = document.getElementById("particlesStatus");
+      const exportBtn = document.getElementById("exportBtn");
+      const toggleHudBtn = document.getElementById("toggleHudBtn");
+      const hudPanel = document.getElementById("hudPanel");
+      const ambientHalo = document.getElementById("ambientHalo");
+      const roseTitle = document.getElementById("roseTitle");
 
-        let width = canvas.width = window.innerWidth;
-        let height = canvas.height = window.innerHeight;
-        let dpr = window.devicePixelRatio || 1;
+      let width = (canvas.width = window.innerWidth);
+      let height = (canvas.height = window.innerHeight);
+      let dpr = Math.min(window.devicePixelRatio || 1, 1.5);
 
-        // Color Themes Definition
-        const THEMES = {
-            red: {
-                primary: 'rgba(255, 0, 60, 0.95)',
-                mid: 'rgba(255, 30, 80, 0.85)',
-                glow: 'rgba(255, 0, 60, 0.35)',
-                titleColor: '#ef4444',
-                halo: 'radial-gradient(circle, rgba(255, 0, 60, 0.18) 0%, rgba(160, 0, 40, 0.08) 40%, rgba(0,0,0,0) 75%)'
-            },
-            pink: {
-                primary: 'rgba(255, 20, 147, 0.95)',
-                mid: 'rgba(255, 105, 180, 0.85)',
-                glow: 'rgba(255, 20, 147, 0.35)',
-                titleColor: '#ec4899',
-                halo: 'radial-gradient(circle, rgba(255, 20, 147, 0.18) 0%, rgba(180, 10, 100, 0.08) 40%, rgba(0,0,0,0) 75%)'
-            },
-            gold: {
-                primary: 'rgba(255, 185, 0, 0.95)',
-                mid: 'rgba(255, 215, 0, 0.85)',
-                glow: 'rgba(255, 160, 0, 0.35)',
-                titleColor: '#f59e0b',
-                halo: 'radial-gradient(circle, rgba(255, 180, 0, 0.18) 0%, rgba(180, 110, 0, 0.08) 40%, rgba(0,0,0,0) 75%)'
-            },
-            blue: {
-                primary: 'rgba(0, 210, 255, 0.95)',
-                mid: 'rgba(0, 245, 255, 0.85)',
-                glow: 'rgba(0, 180, 255, 0.35)',
-                titleColor: '#06b6d4',
-                halo: 'radial-gradient(circle, rgba(0, 210, 255, 0.18) 0%, rgba(0, 110, 180, 0.08) 40%, rgba(0,0,0,0) 75%)'
-            },
-            green: {
-                primary: 'rgba(16, 230, 130, 0.95)',
-                mid: 'rgba(50, 255, 160, 0.85)',
-                glow: 'rgba(10, 200, 110, 0.35)',
-                titleColor: '#10b981',
-                halo: 'radial-gradient(circle, rgba(16, 230, 130, 0.18) 0%, rgba(0, 140, 70, 0.08) 40%, rgba(0,0,0,0) 75%)'
-            }
+      // Color Themes Definition
+      const THEMES = {
+        red: {
+          primary: "rgba(255, 0, 60, 0.95)",
+          mid: "rgba(255, 30, 80, 0.85)",
+          glow: "rgba(255, 0, 60, 0.35)",
+          titleColor: "#ef4444",
+          halo: "radial-gradient(circle, rgba(255, 0, 60, 0.18) 0%, rgba(160, 0, 40, 0.08) 40%, rgba(0,0,0,0) 75%)",
+        },
+        pink: {
+          primary: "rgba(255, 20, 147, 0.95)",
+          mid: "rgba(255, 105, 180, 0.85)",
+          glow: "rgba(255, 20, 147, 0.35)",
+          titleColor: "#ec4899",
+          halo: "radial-gradient(circle, rgba(255, 20, 147, 0.18) 0%, rgba(180, 10, 100, 0.08) 40%, rgba(0,0,0,0) 75%)",
+        },
+        gold: {
+          primary: "rgba(255, 185, 0, 0.95)",
+          mid: "rgba(255, 215, 0, 0.85)",
+          glow: "rgba(255, 160, 0, 0.35)",
+          titleColor: "#f59e0b",
+          halo: "radial-gradient(circle, rgba(255, 180, 0, 0.18) 0%, rgba(180, 110, 0, 0.08) 40%, rgba(0,0,0,0) 75%)",
+        },
+        blue: {
+          primary: "rgba(0, 210, 255, 0.95)",
+          mid: "rgba(0, 245, 255, 0.85)",
+          glow: "rgba(0, 180, 255, 0.35)",
+          titleColor: "#06b6d4",
+          halo: "radial-gradient(circle, rgba(0, 210, 255, 0.18) 0%, rgba(0, 110, 180, 0.08) 40%, rgba(0,0,0,0) 75%)",
+        },
+        green: {
+          primary: "rgba(16, 230, 130, 0.95)",
+          mid: "rgba(50, 255, 160, 0.85)",
+          glow: "rgba(10, 200, 110, 0.35)",
+          titleColor: "#10b981",
+          halo: "radial-gradient(circle, rgba(16, 230, 130, 0.18) 0%, rgba(0, 140, 70, 0.08) 40%, rgba(0,0,0,0) 75%)",
+        },
+      };
+
+      let currentThemeKey = "red";
+      let currentTheme = THEMES.red;
+
+      // Animation State
+      let progress = 0;
+      let isAnimating = true;
+      let pulseEnabled = true;
+      let particlesEnabled = true;
+      const traceSpeed = 0.006;
+      let pulseTime = 0;
+      const glowMultiplier = 2.8;
+      const maxParticles = 150;
+      let lastFrameTime = 0;
+
+      // Interactive Mouse Tracking & Click Shockwaves
+      let mouse = { x: 0, y: 0, targetX: 0, targetY: 0, tiltX: 0, tiltY: 0 };
+      let shockwaves = [];
+      let sparkBursts = [];
+
+      function resize() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        ctx.scale(dpr, dpr);
+      }
+      window.addEventListener("resize", resize);
+      resize();
+
+      window.addEventListener("mousemove", (e) => {
+        mouse.targetX = (e.clientX - width / 2) / (width / 2);
+        mouse.targetY = (e.clientY - height / 2) / (height / 2);
+      });
+
+      window.addEventListener("touchmove", (e) => {
+        if (e.touches.length > 0) {
+          mouse.targetX = (e.touches[0].clientX - width / 2) / (width / 2);
+          mouse.targetY = (e.touches[0].clientY - height / 2) / (height / 2);
+        }
+      });
+
+      // Click-to-Burst Interactive FX
+      window.addEventListener("pointerdown", (e) => {
+        if (e.target !== canvas) return;
+        const rect = canvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const clickY = e.clientY - rect.top;
+
+        // Trigger Shockwave
+        shockwaves.push({
+          x: clickX,
+          y: clickY,
+          radius: 5,
+          maxRadius: 180,
+          alpha: 1.0,
+        });
+
+        // Trigger Spark Burst
+        for (let i = 0; i < 25; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = Math.random() * 5 + 2;
+          sparkBursts.push({
+            x: clickX,
+            y: clickY,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: Math.random() * 2.5 + 1,
+            alpha: 1.0,
+            decay: Math.random() * 0.03 + 0.015,
+          });
+        }
+      });
+
+      function generateRoseGeometry() {
+        const paths = [];
+
+        const addCurve = (pts, weight = 1.0, layer = "petal") => {
+          paths.push({ points: pts, weight, layer });
         };
 
-        let currentThemeKey = 'red';
-        let currentTheme = THEMES.red;
+        // 1. DENSE CENTRAL SPIRAL CORE WHORL (Overlapping parametric swirl)
+        const coreLayers = 22;
+        for (let i = 0; i < coreLayers; i++) {
+          const angle = i * 0.65;
+          const r1 = 0.006 + i * 0.007;
+          const r2 = 0.012 + i * 0.01;
+          const cx = Math.cos(angle) * r1;
+          const cy = -0.22 + Math.sin(angle) * r1 * 0.55;
 
-        // Animation State
-        let progress = 0;
-        let isAnimating = true;
-        let pulseEnabled = true;
-        let particlesEnabled = true;
-        const traceSpeed = 0.025;
-        let pulseTime = 0;
-        const glowMultiplier = 2.8;
-        const maxParticles = 150;
-        let lastFrameTime = 0;
-
-        // Interactive Mouse Tracking & Click Shockwaves
-        let mouse = { x: 0, y: 0, targetX: 0, targetY: 0, tiltX: 0, tiltY: 0 };
-        let shockwaves = [];
-        let sparkBursts = [];
-
-        function resize() {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            dpr = window.devicePixelRatio || 1;
-            canvas.width = width * dpr;
-            canvas.height = height * dpr;
-            ctx.scale(dpr, dpr);
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.targetX = (e.clientX - width / 2) / (width / 2);
-            mouse.targetY = (e.clientY - height / 2) / (height / 2);
-        });
-
-        window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0) {
-                mouse.targetX = (e.touches[0].clientX - width / 2) / (width / 2);
-                mouse.targetY = (e.touches[0].clientY - height / 2) / (height / 2);
-            }
-        });
-
-        // Click-to-Burst Interactive FX
-        window.addEventListener('pointerdown', (e) => {
-            if (e.target !== canvas) return;
-            const rect = canvas.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const clickY = e.clientY - rect.top;
-
-            // Trigger Shockwave
-            shockwaves.push({ x: clickX, y: clickY, radius: 5, maxRadius: 180, alpha: 1.0 });
-
-            // Trigger Spark Burst
-            for (let i = 0; i < 25; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 5 + 2;
-                sparkBursts.push({
-                    x: clickX,
-                    y: clickY,
-                    vx: Math.cos(angle) * speed,
-                    vy: Math.sin(angle) * speed,
-                    size: Math.random() * 2.5 + 1,
-                    alpha: 1.0,
-                    decay: Math.random() * 0.03 + 0.015
-                });
-            }
-        });
-
-        function generateRoseGeometry() {
-            const paths = [];
-
-            const addCurve = (pts, weight = 1.0, layer = 'petal') => {
-                paths.push({ points: pts, weight, layer });
-            };
-
-            // 1. DENSE CENTRAL SPIRAL CORE WHORL (Overlapping parametric swirl)
-            const coreLayers = 22;
-            for (let i = 0; i < coreLayers; i++) {
-                const angle = i * 0.65;
-                const r1 = 0.006 + i * 0.007;
-                const r2 = 0.012 + i * 0.010;
-                const cx = Math.cos(angle) * r1;
-                const cy = -0.22 + Math.sin(angle) * r1 * 0.55;
-
-                addCurve([
-                    cx, cy,
-                    cx + Math.cos(angle + 0.8) * r2, cy + Math.sin(angle + 0.8) * r2,
-                    cx + Math.cos(angle + 1.6) * r2 * 1.25, cy + Math.sin(angle + 1.6) * r2 * 1.25,
-                    Math.cos(angle + 2.3) * (r1 + 0.014), -0.22 + Math.sin(angle + 2.3) * (r1 + 0.014) * 0.55
-                ], 0.65, 'core');
-            }
-
-            // 2. INNER CUPPED PETALS (Tight overlapping layers)
-            const innerPetalCount = 18;
-            for (let i = 0; i < innerPetalCount; i++) {
-                const rot = (i * Math.PI * 2) / innerPetalCount + (i % 2) * 0.18;
-                const dist = 0.038 + (i * 0.005);
-                const ox = Math.cos(rot) * dist;
-                const oy = -0.22 + Math.sin(rot) * dist * 0.65;
-
-                addCurve([
-                    ox - 0.025 * Math.sin(rot), oy + 0.025 * Math.cos(rot),
-                    ox - 0.055 * Math.sin(rot + 0.4), oy - 0.075,
-                    ox + 0.055 * Math.sin(rot - 0.4), oy - 0.075,
-                    ox + 0.025 * Math.sin(rot), oy - 0.025 * Math.cos(rot)
-                ], 0.8, 'innerPetal');
-
-                // Inner petal fold lines
-                addCurve([
-                    ox - 0.018 * Math.sin(rot), oy + 0.01,
-                    ox, oy - 0.045,
-                    ox + 0.018 * Math.sin(rot), oy + 0.01
-                ], 0.45, 'innerPetal');
-            }
-
-            // 3. MID-LAYER PETALS WITH REFLEXED/CURLED EDGES
-            const midPetalRings = 5;
-            const petalsPerRing = 8;
-            for (let r = 0; r < midPetalRings; r++) {
-                const radius = 0.09 + r * 0.04;
-                for (let p = 0; p < petalsPerRing; p++) {
-                    const a = (p / petalsPerRing) * Math.PI * 2 + r * 0.4;
-                    const cosA = Math.cos(a);
-                    const sinA = Math.sin(a);
-
-                    const x1 = cosA * radius;
-                    const y1 = -0.21 + sinA * radius * 0.65;
-                    const x2 = Math.cos(a + 0.8) * (radius + 0.045);
-                    const y2 = -0.21 + Math.sin(a + 0.8) * (radius + 0.045) * 0.65;
-
-                    // Petal Contour
-                    addCurve([
-                        x1, y1,
-                        x1 + cosA * 0.11 - sinA * 0.09, y1 + sinA * 0.09 + cosA * 0.09,
-                        x2 + cosA * 0.045 + sinA * 0.09, y2 + sinA * 0.045 - cosA * 0.09,
-                        x2, y2
-                    ], 1.05, 'midPetal');
-
-                    // Reflexed Rolled Lip Detail
-                    addCurve([
-                        x1 + cosA * 0.05, y1 + sinA * 0.05,
-                        x1 + cosA * 0.13 - sinA * 0.04, y1 + sinA * 0.07 + cosA * 0.04,
-                        x2, y2
-                    ], 0.6, 'midPetal');
-                }
-            }
-
-            // 4. LARGE EXPANSIVE OUTER GUARD PETALS
-            const outerPetalCount = 12;
-            for (let i = 0; i < outerPetalCount; i++) {
-                const a1 = (i / outerPetalCount) * Math.PI * 2;
-                const a2 = a1 + 0.72;
-                const rad = 0.27 + (i % 3) * 0.035;
-
-                const startX = Math.cos(a1) * (rad - 0.05);
-                const startY = -0.20 + Math.sin(a1) * (rad - 0.05) * 0.68;
-                const endX = Math.cos(a2) * rad;
-                const endY = -0.20 + Math.sin(a2) * rad * 0.68;
-
-                addCurve([
-                    startX, startY,
-                    Math.cos(a1 + 0.22) * (rad + 0.11), -0.20 + Math.sin(a1 + 0.22) * (rad + 0.11) * 0.72,
-                    Math.cos(a2 - 0.22) * (rad + 0.11), -0.20 + Math.sin(a2 - 0.22) * (rad + 0.11) * 0.72,
-                    endX, endY
-                ], 1.25, 'outerPetal');
-
-                // Structural Shading Veins on Guard Petals
-                addCurve([
-                    startX + 0.02, startY + 0.015,
-                    Math.cos(a1 + 0.28) * (rad + 0.03), -0.20 + Math.sin(a1 + 0.28) * (rad + 0.03) * 0.68,
-                    endX - 0.02, endY + 0.015
-                ], 0.65, 'outerPetal');
-            }
-
-            // 5. BOTANICAL BASE, SEPALS, STEM & THORNS
-            // Sepals wrapping flower head
-            addCurve([ -0.04, 0.07, -0.18, 0.15, -0.32, 0.10, -0.42, -0.02 ], 1.1, 'sepal');
-            addCurve([  0.04, 0.07,  0.18, 0.15,  0.32, 0.10,  0.42, -0.02 ], 1.1, 'sepal');
-            addCurve([ -0.01, 0.08, -0.08, 0.22, -0.12, 0.35, -0.16, 0.45 ], 0.95, 'sepal');
-            addCurve([  0.01, 0.08,  0.08, 0.22,  0.12, 0.35,  0.16, 0.45 ], 0.95, 'sepal');
-
-            // Main Stem Contours
-            addCurve([ -0.04,  0.07,  -0.08,  0.22,  -0.05,  0.42,  -0.02,  0.68 ], 1.4, 'stem');
-            addCurve([  0.04,  0.07,   0.01,  0.22,  -0.01,  0.42,   0.02,  0.68 ], 1.4, 'stem');
-            addCurve([ -0.015, 0.12,  -0.04,  0.28,  -0.025, 0.48,   0.00,  0.68 ], 0.5, 'stem');
-
-            // Realistic Sharp Thorns
-            addCurve([ -0.055, 0.20, -0.11, 0.22, -0.14, 0.25, -0.045, 0.26 ], 1.1, 'thorn');
-            addCurve([  0.02,  0.35,  0.09, 0.37,  0.12, 0.40,  0.015, 0.41 ], 1.1, 'thorn');
-
-            // 6. SERRATED LEAVES WITH MULTI-TIER SUB-VEINS
-            const generateLeaf = (originX, originY, angle, size, flip = 1) => {
-                const cosL = Math.cos(angle);
-                const sinL = Math.sin(angle);
-
-                const transformPoint = (px, py) => {
-                    const rx = px * flip;
-                    const x = originX + (rx * cosL - py * sinL) * size;
-                    const y = originY + (rx * sinL + py * cosL) * size;
-                    return { x, y };
-                };
-
-                // Main Central Spine
-                const p0 = transformPoint(0, 0);
-                const p1 = transformPoint(0.3, -0.05);
-                const p2 = transformPoint(0.7, -0.02);
-                const p3 = transformPoint(1.0, 0);
-                addCurve([ p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y ], 1.25, 'leafSpine');
-
-                // Leaf Edge Serrations & Sub-Veins
-                const serrations = 7;
-                for (let i = 0; i < serrations; i++) {
-                    const t1 = i / serrations;
-                    const t2 = (i + 1) / serrations;
-
-                    const sp1 = transformPoint(t1 * 0.95, -0.02 - Math.sin(t1 * Math.PI) * 0.22);
-                    const sp2 = transformPoint(t2 * 0.95, -0.02 - Math.sin(t2 * Math.PI) * 0.22);
-                    const tip = transformPoint(t2 * 0.95 - 0.02, -0.02 - Math.sin(t2 * Math.PI) * 0.28);
-
-                    addCurve([ sp1.x, sp1.y, (sp1.x + tip.x)/2, (sp1.y + tip.y)/2, tip.x, tip.y, sp2.x, sp2.y ], 0.85, 'leafEdge');
-
-                    const bp1 = transformPoint(t1 * 0.95, 0.02 + Math.sin(t1 * Math.PI) * 0.22);
-                    const bp2 = transformPoint(t2 * 0.95, 0.02 + Math.sin(t2 * Math.PI) * 0.22);
-                    const btip = transformPoint(t2 * 0.95 - 0.02, 0.02 + Math.sin(t2 * Math.PI) * 0.28);
-                    addCurve([ bp1.x, bp1.y, (bp1.x + btip.x)/2, (bp1.y + btip.y)/2, btip.x, btip.y, bp2.x, bp2.y ], 0.85, 'leafEdge');
-
-                    // Primary Sub-Veins
-                    if (i > 0 && i < serrations - 1) {
-                        const spinePt = transformPoint(t1 * 0.95, 0);
-                        addCurve([ spinePt.x, spinePt.y, (spinePt.x + tip.x)/2, (spinePt.y + tip.y)/2, tip.x, tip.y ], 0.5, 'vein');
-                        addCurve([ spinePt.x, spinePt.y, (spinePt.x + btip.x)/2, (spinePt.y + btip.y)/2, btip.x, btip.y ], 0.5, 'vein');
-                    }
-                }
-            };
-
-            generateLeaf(-0.06, 0.24, -2.4, 0.46, 1);
-            generateLeaf( 0.03, 0.27,  0.3, 0.46, 1);
-            generateLeaf(-0.05, 0.44, -2.1, 0.39, 1);
-            generateLeaf( 0.02, 0.47,  0.6, 0.39, 1);
-
-            return paths;
+          addCurve(
+            [
+              cx,
+              cy,
+              cx + Math.cos(angle + 0.8) * r2,
+              cy + Math.sin(angle + 0.8) * r2,
+              cx + Math.cos(angle + 1.6) * r2 * 1.25,
+              cy + Math.sin(angle + 1.6) * r2 * 1.25,
+              Math.cos(angle + 2.3) * (r1 + 0.014),
+              -0.22 + Math.sin(angle + 2.3) * (r1 + 0.014) * 0.55,
+            ],
+            0.65,
+            "core",
+          );
         }
 
-        const rosePaths = generateRoseGeometry();
+        // 2. INNER CUPPED PETALS (Tight overlapping layers)
+        const innerPetalCount = 18;
+        for (let i = 0; i < innerPetalCount; i++) {
+          const rot = (i * Math.PI * 2) / innerPetalCount + (i % 2) * 0.18;
+          const dist = 0.038 + i * 0.005;
+          const ox = Math.cos(rot) * dist;
+          const oy = -0.22 + Math.sin(rot) * dist * 0.65;
 
-        // Particle Class (Rising Embers)
-        class Particle {
-            constructor() {
-                this.reset();
-            }
+          addCurve(
+            [
+              ox - 0.025 * Math.sin(rot),
+              oy + 0.025 * Math.cos(rot),
+              ox - 0.055 * Math.sin(rot + 0.4),
+              oy - 0.075,
+              ox + 0.055 * Math.sin(rot - 0.4),
+              oy - 0.075,
+              ox + 0.025 * Math.sin(rot),
+              oy - 0.025 * Math.cos(rot),
+            ],
+            0.8,
+            "innerPetal",
+          );
 
-            reset() {
-                this.x = (Math.random() - 0.5) * width;
-                this.y = (Math.random() - 0.2) * height;
-                this.size = Math.random() * 2.2 + 0.6;
-                this.speedY = -(Math.random() * 0.45 + 0.15);
-                this.speedX = (Math.random() - 0.5) * 0.3;
-                this.alpha = Math.random() * 0.85 + 0.15;
-            }
-
-            update(frameScale) {
-                this.y += this.speedY * frameScale;
-                this.x += (this.speedX + Math.sin(pulseTime + this.y * 0.01) * 0.2) * frameScale;
-                this.alpha += Math.sin(pulseTime * 4) * 0.01 * frameScale;
-
-                if (this.y < -height / 2 || this.alpha <= 0) {
-                    this.reset();
-                    this.y = height / 2;
-                }
-            }
-
-            draw(ctx, centerX, centerY, currentGlow) {
-                ctx.save();
-                ctx.fillStyle = currentTheme.mid.replace('0.85', Math.max(0, Math.min(1, this.alpha)).toFixed(2));
-                ctx.shadowColor = currentTheme.primary;
-                ctx.shadowBlur = 8 * currentGlow;
-                ctx.beginPath();
-                ctx.arc(centerX + this.x, centerY + this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
+          // Inner petal fold lines
+          addCurve(
+            [
+              ox - 0.018 * Math.sin(rot),
+              oy + 0.01,
+              ox,
+              oy - 0.045,
+              ox + 0.018 * Math.sin(rot),
+              oy + 0.01,
+            ],
+            0.45,
+            "innerPetal",
+          );
         }
 
-        let particles = Array.from({ length: maxParticles }, () => new Particle());
+        // 3. MID-LAYER PETALS WITH REFLEXED/CURLED EDGES
+        const midPetalRings = 5;
+        const petalsPerRing = 8;
+        for (let r = 0; r < midPetalRings; r++) {
+          const radius = 0.09 + r * 0.04;
+          for (let p = 0; p < petalsPerRing; p++) {
+            const a = (p / petalsPerRing) * Math.PI * 2 + r * 0.4;
+            const cosA = Math.cos(a);
+            const sinA = Math.sin(a);
 
-        function getBezierPoint(t, p0x, p0y, cp1x, cp1y, cp2x, cp2y, p1x, p1y) {
-            const u = 1 - t;
-            const tt = t * t;
-            const uu = u * u;
-            const uuu = uu * u;
-            const ttt = tt * t;
+            const x1 = cosA * radius;
+            const y1 = -0.21 + sinA * radius * 0.65;
+            const x2 = Math.cos(a + 0.8) * (radius + 0.045);
+            const y2 = -0.21 + Math.sin(a + 0.8) * (radius + 0.045) * 0.65;
 
-            let x = uuu * p0x + 3 * uu * t * cp1x + 3 * u * tt * cp2x + ttt * p1x;
-            let y = uuu * p0y + 3 * uu * t * cp1y + 3 * u * tt * cp2y + ttt * p1y;
+            // Petal Contour
+            addCurve(
+              [
+                x1,
+                y1,
+                x1 + cosA * 0.11 - sinA * 0.09,
+                y1 + sinA * 0.09 + cosA * 0.09,
+                x2 + cosA * 0.045 + sinA * 0.09,
+                y2 + sinA * 0.045 - cosA * 0.09,
+                x2,
+                y2,
+              ],
+              1.05,
+              "midPetal",
+            );
+
+            // Reflexed Rolled Lip Detail
+            addCurve(
+              [
+                x1 + cosA * 0.05,
+                y1 + sinA * 0.05,
+                x1 + cosA * 0.13 - sinA * 0.04,
+                y1 + sinA * 0.07 + cosA * 0.04,
+                x2,
+                y2,
+              ],
+              0.6,
+              "midPetal",
+            );
+          }
+        }
+
+        // 4. LARGE EXPANSIVE OUTER GUARD PETALS
+        const outerPetalCount = 12;
+        for (let i = 0; i < outerPetalCount; i++) {
+          const a1 = (i / outerPetalCount) * Math.PI * 2;
+          const a2 = a1 + 0.72;
+          const rad = 0.27 + (i % 3) * 0.035;
+
+          const startX = Math.cos(a1) * (rad - 0.05);
+          const startY = -0.2 + Math.sin(a1) * (rad - 0.05) * 0.68;
+          const endX = Math.cos(a2) * rad;
+          const endY = -0.2 + Math.sin(a2) * rad * 0.68;
+
+          addCurve(
+            [
+              startX,
+              startY,
+              Math.cos(a1 + 0.22) * (rad + 0.11),
+              -0.2 + Math.sin(a1 + 0.22) * (rad + 0.11) * 0.72,
+              Math.cos(a2 - 0.22) * (rad + 0.11),
+              -0.2 + Math.sin(a2 - 0.22) * (rad + 0.11) * 0.72,
+              endX,
+              endY,
+            ],
+            1.25,
+            "outerPetal",
+          );
+
+          // Structural Shading Veins on Guard Petals
+          addCurve(
+            [
+              startX + 0.02,
+              startY + 0.015,
+              Math.cos(a1 + 0.28) * (rad + 0.03),
+              -0.2 + Math.sin(a1 + 0.28) * (rad + 0.03) * 0.68,
+              endX - 0.02,
+              endY + 0.015,
+            ],
+            0.65,
+            "outerPetal",
+          );
+        }
+
+        // 5. BOTANICAL BASE, SEPALS, STEM & THORNS
+        // Sepals wrapping flower head
+        addCurve(
+          [-0.04, 0.07, -0.18, 0.15, -0.32, 0.1, -0.42, -0.02],
+          1.1,
+          "sepal",
+        );
+        addCurve(
+          [0.04, 0.07, 0.18, 0.15, 0.32, 0.1, 0.42, -0.02],
+          1.1,
+          "sepal",
+        );
+        addCurve(
+          [-0.01, 0.08, -0.08, 0.22, -0.12, 0.35, -0.16, 0.45],
+          0.95,
+          "sepal",
+        );
+        addCurve(
+          [0.01, 0.08, 0.08, 0.22, 0.12, 0.35, 0.16, 0.45],
+          0.95,
+          "sepal",
+        );
+
+        // Main Stem Contours
+        addCurve(
+          [-0.04, 0.07, -0.08, 0.22, -0.05, 0.42, -0.02, 0.68],
+          1.4,
+          "stem",
+        );
+        addCurve(
+          [0.04, 0.07, 0.01, 0.22, -0.01, 0.42, 0.02, 0.68],
+          1.4,
+          "stem",
+        );
+        addCurve(
+          [-0.015, 0.12, -0.04, 0.28, -0.025, 0.48, 0.0, 0.68],
+          0.5,
+          "stem",
+        );
+
+        // Realistic Sharp Thorns
+        addCurve(
+          [-0.055, 0.2, -0.11, 0.22, -0.14, 0.25, -0.045, 0.26],
+          1.1,
+          "thorn",
+        );
+        addCurve(
+          [0.02, 0.35, 0.09, 0.37, 0.12, 0.4, 0.015, 0.41],
+          1.1,
+          "thorn",
+        );
+
+        // 6. SERRATED LEAVES WITH MULTI-TIER SUB-VEINS
+        const generateLeaf = (originX, originY, angle, size, flip = 1) => {
+          const cosL = Math.cos(angle);
+          const sinL = Math.sin(angle);
+
+          const transformPoint = (px, py) => {
+            const rx = px * flip;
+            const x = originX + (rx * cosL - py * sinL) * size;
+            const y = originY + (rx * sinL + py * cosL) * size;
             return { x, y };
-        }
+          };
 
-        function drawScene(timestamp = performance.now()) {
-            const frameDelta = lastFrameTime ? Math.min(32, timestamp - lastFrameTime) : 16.67;
-            const frameScale = frameDelta / 16.67;
-            lastFrameTime = timestamp;
+          // Main Central Spine
+          const p0 = transformPoint(0, 0);
+          const p1 = transformPoint(0.3, -0.05);
+          const p2 = transformPoint(0.7, -0.02);
+          const p3 = transformPoint(1.0, 0);
+          addCurve(
+            [p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y],
+            1.25,
+            "leafSpine",
+          );
 
-            // Smooth Parallax Interpolation
-            const smoothing = 1 - Math.pow(0.95, frameScale);
-            mouse.tiltX += (mouse.targetX - mouse.tiltX) * smoothing;
-            mouse.tiltY += (mouse.targetY - mouse.tiltY) * smoothing;
+          // Leaf Edge Serrations & Sub-Veins
+          const serrations = 7;
+          for (let i = 0; i < serrations; i++) {
+            const t1 = i / serrations;
+            const t2 = (i + 1) / serrations;
 
-            ctx.clearRect(0, 0, width, height);
+            const sp1 = transformPoint(
+              t1 * 0.95,
+              -0.02 - Math.sin(t1 * Math.PI) * 0.22,
+            );
+            const sp2 = transformPoint(
+              t2 * 0.95,
+              -0.02 - Math.sin(t2 * Math.PI) * 0.22,
+            );
+            const tip = transformPoint(
+              t2 * 0.95 - 0.02,
+              -0.02 - Math.sin(t2 * Math.PI) * 0.28,
+            );
 
-            const scale = Math.min(width, height) * 0.75;
-            const centerX = width / 2 + mouse.tiltX * 25;
-            const centerY = height / 2 + scale * 0.02 + mouse.tiltY * 25;
+            addCurve(
+              [
+                sp1.x,
+                sp1.y,
+                (sp1.x + tip.x) / 2,
+                (sp1.y + tip.y) / 2,
+                tip.x,
+                tip.y,
+                sp2.x,
+                sp2.y,
+              ],
+              0.85,
+              "leafEdge",
+            );
 
-            // Breathing Glow Cycle
-            if (pulseEnabled) {
-                pulseTime += 0.025 * frameScale;
+            const bp1 = transformPoint(
+              t1 * 0.95,
+              0.02 + Math.sin(t1 * Math.PI) * 0.22,
+            );
+            const bp2 = transformPoint(
+              t2 * 0.95,
+              0.02 + Math.sin(t2 * Math.PI) * 0.22,
+            );
+            const btip = transformPoint(
+              t2 * 0.95 - 0.02,
+              0.02 + Math.sin(t2 * Math.PI) * 0.28,
+            );
+            addCurve(
+              [
+                bp1.x,
+                bp1.y,
+                (bp1.x + btip.x) / 2,
+                (bp1.y + btip.y) / 2,
+                btip.x,
+                btip.y,
+                bp2.x,
+                bp2.y,
+              ],
+              0.85,
+              "leafEdge",
+            );
+
+            // Primary Sub-Veins
+            if (i > 0 && i < serrations - 1) {
+              const spinePt = transformPoint(t1 * 0.95, 0);
+              addCurve(
+                [
+                  spinePt.x,
+                  spinePt.y,
+                  (spinePt.x + tip.x) / 2,
+                  (spinePt.y + tip.y) / 2,
+                  tip.x,
+                  tip.y,
+                ],
+                0.5,
+                "vein",
+              );
+              addCurve(
+                [
+                  spinePt.x,
+                  spinePt.y,
+                  (spinePt.x + btip.x) / 2,
+                  (spinePt.y + btip.y) / 2,
+                  btip.x,
+                  btip.y,
+                ],
+                0.5,
+                "vein",
+              );
             }
-            const pulseFactor = pulseEnabled ? Math.sin(pulseTime) * 0.24 + 1.0 : 1.0;
-            const currentGlow = glowMultiplier * pulseFactor;
-
-            // Tracing Progress
-            if (isAnimating) {
-                progress += traceSpeed * frameScale;
-                if (progress >= 1.0) {
-                    progress = 1.0;
-                    isAnimating = false;
-                }
-            }
-
-            // Render Particle Embers
-            if (particlesEnabled) {
-                particles.forEach(p => {
-                    p.update(frameScale);
-                    p.draw(ctx, centerX, centerY, currentGlow);
-                });
-            }
-
-            // Render Interactive Click Shockwaves
-            for (let i = shockwaves.length - 1; i >= 0; i--) {
-                const sw = shockwaves[i];
-                sw.radius += 6 * frameScale;
-                sw.alpha -= 0.02 * frameScale;
-                if (sw.alpha <= 0 || sw.radius >= sw.maxRadius) {
-                    shockwaves.splice(i, 1);
-                    continue;
-                }
-                ctx.save();
-                ctx.strokeStyle = currentTheme.primary.replace('0.95', sw.alpha.toFixed(2));
-                ctx.shadowColor = currentTheme.primary;
-                ctx.shadowBlur = 15 * currentGlow;
-                ctx.lineWidth = 2.5;
-                ctx.beginPath();
-                ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            // Render Click Spark Bursts
-            for (let i = sparkBursts.length - 1; i >= 0; i--) {
-                const sp = sparkBursts[i];
-                sp.x += sp.vx * frameScale;
-                sp.y += sp.vy * frameScale;
-                sp.alpha -= sp.decay * frameScale;
-                if (sp.alpha <= 0) {
-                    sparkBursts.splice(i, 1);
-                    continue;
-                }
-                ctx.save();
-                ctx.fillStyle = currentTheme.mid.replace('0.85', sp.alpha.toFixed(2));
-                ctx.shadowColor = currentTheme.primary;
-                ctx.shadowBlur = 10 * currentGlow;
-                ctx.beginPath();
-                ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-
-            const totalPaths = rosePaths.length;
-            const activePathCount = progress * totalPaths;
-
-            // 4-Pass Multi-Layer Neon Glow Shader Pass Definitions
-            const passes = [
-                { color: currentTheme.glow, blur: 36 * currentGlow, widthScale: 3.4 }, // Wide Outer Halo
-                { color: currentTheme.mid, blur: 16 * currentGlow, widthScale: 1.8 },  // Saturated Inner Stroke
-                { color: currentTheme.primary, blur: 6 * currentGlow, widthScale: 1.1 },// Vibrant Neon Center
-                { color: '#ffffff', blur: 2 * currentGlow, widthScale: 0.6 }             // Hot Laser Core
-            ];
-
-            passes.forEach(pass => {
-                ctx.save();
-                ctx.shadowColor = currentTheme.primary;
-                ctx.shadowBlur = pass.blur;
-                ctx.strokeStyle = pass.color;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-
-                for (let i = 0; i < totalPaths; i++) {
-                    if (i > activePathCount) break;
-
-                    const pathProgress = Math.min(1, activePathCount - i);
-                    const item = rosePaths[i];
-                    const pts = item.points;
-
-                    ctx.lineWidth = item.weight * pass.widthScale;
-
-                    const transform = (nx, ny) => {
-                        const px = centerX + (nx + mouse.tiltX * 0.08 * (ny + 0.3)) * scale;
-                        const py = centerY + (ny + mouse.tiltY * 0.08 * (nx)) * scale;
-                        return { x: px, y: py };
-                    };
-
-                    let p0, cp1, cp2, p1;
-
-                    if (pts.length === 8) {
-                        p0 = transform(pts[0], pts[1]);
-                        cp1 = transform(pts[2], pts[3]);
-                        cp2 = transform(pts[4], pts[5]);
-                        p1 = transform(pts[6], pts[7]);
-                    } else if (pts.length === 6) {
-                        p0 = transform(pts[0], pts[1]);
-                        cp1 = transform(pts[2], pts[3]);
-                        cp2 = transform((pts[2]+pts[4])/2, (pts[3]+pts[5])/2);
-                        p1 = transform(pts[4], pts[5]);
-                    }
-
-                    ctx.beginPath();
-                    ctx.moveTo(p0.x, p0.y);
-
-                    if (pathProgress < 1.0) {
-                        const sub = getBezierPoint(pathProgress, p0.x, p0.y, cp1.x, cp1.y, cp2.x, cp2.y, p1.x, p1.y);
-                        ctx.quadraticCurveTo(cp1.x, cp1.y, sub.x, sub.y);
-                    } else {
-                        ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p1.x, p1.y);
-                    }
-
-                    ctx.stroke();
-                }
-                ctx.restore();
-            });
-
-            requestAnimationFrame(drawScene);
-        }
-
-        replayBtn.addEventListener('click', () => {
-            progress = 0;
-            isAnimating = true;
-        });
-
-        pulseBtn.addEventListener('click', () => {
-            pulseEnabled = !pulseEnabled;
-            pulseStatus.textContent = `Pulse: ${pulseEnabled ? 'ON' : 'OFF'}`;
-            pulseBtn.classList.toggle('active', pulseEnabled);
-        });
-
-        particlesBtn.addEventListener('click', () => {
-            particlesEnabled = !particlesEnabled;
-            particlesStatus.textContent = `Embers: ${particlesEnabled ? 'ON' : 'OFF'}`;
-            particlesBtn.classList.toggle('active', particlesEnabled);
-        });
-
-        toggleHudBtn.addEventListener('click', () => {
-            hudPanel.classList.toggle('collapsed');
-        });
-
-        // Theme Swatches Listener
-        document.querySelectorAll('.color-swatch').forEach(swatch => {
-            swatch.addEventListener('click', () => {
-                document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-                swatch.classList.add('active');
-
-                currentThemeKey = swatch.dataset.theme;
-                currentTheme = THEMES[currentThemeKey];
-
-                // Update Ambient Halo & Title Colors
-                ambientHalo.style.background = currentTheme.halo;
-                roseTitle.style.color = currentTheme.titleColor;
-            });
-        });
-
-        exportBtn.addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = `hyperion-neon-rose-${currentThemeKey}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        });
-
-        window.onload = () => {
-            drawScene();
+          }
         };
+
+        generateLeaf(-0.06, 0.24, -2.4, 0.46, 1);
+        generateLeaf(0.03, 0.27, 0.3, 0.46, 1);
+        generateLeaf(-0.05, 0.44, -2.1, 0.39, 1);
+        generateLeaf(0.02, 0.47, 0.6, 0.39, 1);
+
+        return paths;
+      }
+
+      const rosePaths = generateRoseGeometry();
+
+      // Particle Class (Rising Embers)
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+
+        reset() {
+          this.x = (Math.random() - 0.5) * width;
+          this.y = (Math.random() - 0.2) * height;
+          this.size = Math.random() * 2.2 + 0.6;
+          this.speedY = -(Math.random() * 0.45 + 0.15);
+          this.speedX = (Math.random() - 0.5) * 0.3;
+          this.alpha = Math.random() * 0.85 + 0.15;
+        }
+
+        update(frameScale) {
+          this.y += this.speedY * frameScale;
+          this.x +=
+            (this.speedX + Math.sin(pulseTime + this.y * 0.01) * 0.2) *
+            frameScale;
+          this.alpha += Math.sin(pulseTime * 4) * 0.01 * frameScale;
+
+          if (this.y < -height / 2 || this.alpha <= 0) {
+            this.reset();
+            this.y = height / 2;
+          }
+        }
+
+        draw(ctx, centerX, centerY) {
+          ctx.fillStyle = currentTheme.mid.replace(
+            "0.85",
+            Math.max(0, Math.min(1, this.alpha)).toFixed(2),
+          );
+          ctx.beginPath();
+          ctx.arc(
+            centerX + this.x,
+            centerY + this.y,
+            this.size,
+            0,
+            Math.PI * 2,
+          );
+          ctx.fill();
+        }
+      }
+
+      let particles = Array.from(
+        { length: maxParticles },
+        () => new Particle(),
+      );
+
+      function getBezierPoint(t, p0x, p0y, cp1x, cp1y, cp2x, cp2y, p1x, p1y) {
+        const u = 1 - t;
+        const tt = t * t;
+        const uu = u * u;
+        const uuu = uu * u;
+        const ttt = tt * t;
+
+        let x = uuu * p0x + 3 * uu * t * cp1x + 3 * u * tt * cp2x + ttt * p1x;
+        let y = uuu * p0y + 3 * uu * t * cp1y + 3 * u * tt * cp2y + ttt * p1y;
+        return { x, y };
+      }
+
+      function drawScene(timestamp = performance.now()) {
+        const frameDelta = lastFrameTime
+          ? Math.min(32, timestamp - lastFrameTime)
+          : 16.67;
+        const frameScale = frameDelta / 16.67;
+        lastFrameTime = timestamp;
+
+        // Smooth Parallax Interpolation
+        const smoothing = 1 - Math.pow(0.95, frameScale);
+        mouse.tiltX += (mouse.targetX - mouse.tiltX) * smoothing;
+        mouse.tiltY += (mouse.targetY - mouse.tiltY) * smoothing;
+
+        ctx.clearRect(0, 0, width, height);
+
+        const scale = Math.min(width, height) * 0.75;
+        const centerX = width / 2 + mouse.tiltX * 25;
+        const centerY = height / 2 + scale * 0.02 + mouse.tiltY * 25;
+
+        // Breathing Glow Cycle
+        if (pulseEnabled) {
+          pulseTime += 0.025 * frameScale;
+        }
+        const pulseFactor = pulseEnabled
+          ? Math.sin(pulseTime) * 0.24 + 1.0
+          : 1.0;
+        const currentGlow = glowMultiplier * pulseFactor;
+
+        // Tracing Progress
+        if (isAnimating) {
+          progress += traceSpeed * frameScale;
+          if (progress >= 1.0) {
+            progress = 1.0;
+            isAnimating = false;
+          }
+        }
+
+        // Render Particle Embers
+        if (particlesEnabled) {
+          ctx.save();
+          ctx.shadowColor = currentTheme.primary;
+          ctx.shadowBlur = 8 * currentGlow;
+          particles.forEach((p) => {
+            p.update(frameScale);
+            p.draw(ctx, centerX, centerY);
+          });
+          ctx.restore();
+        }
+
+        // Render Interactive Click Shockwaves
+        for (let i = shockwaves.length - 1; i >= 0; i--) {
+          const sw = shockwaves[i];
+          sw.radius += 6 * frameScale;
+          sw.alpha -= 0.02 * frameScale;
+          if (sw.alpha <= 0 || sw.radius >= sw.maxRadius) {
+            shockwaves.splice(i, 1);
+            continue;
+          }
+          ctx.save();
+          ctx.strokeStyle = currentTheme.primary.replace(
+            "0.95",
+            sw.alpha.toFixed(2),
+          );
+          ctx.shadowColor = currentTheme.primary;
+          ctx.shadowBlur = 15 * currentGlow;
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(sw.x, sw.y, sw.radius, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        // Render Click Spark Bursts
+        ctx.save();
+        ctx.shadowColor = currentTheme.primary;
+        ctx.shadowBlur = 10 * currentGlow;
+        for (let i = sparkBursts.length - 1; i >= 0; i--) {
+          const sp = sparkBursts[i];
+          sp.x += sp.vx * frameScale;
+          sp.y += sp.vy * frameScale;
+          sp.alpha -= sp.decay * frameScale;
+          if (sp.alpha <= 0) {
+            sparkBursts.splice(i, 1);
+            continue;
+          }
+          ctx.fillStyle = currentTheme.mid.replace("0.85", sp.alpha.toFixed(2));
+          ctx.beginPath();
+          ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+
+        const totalPaths = rosePaths.length;
+        const easedProgress = progress * progress * (3 - 2 * progress);
+        const activePathCount = easedProgress * totalPaths;
+
+        // 4-Pass Multi-Layer Neon Glow Shader Pass Definitions
+        const passes = [
+          { color: currentTheme.glow, blur: 36 * currentGlow, widthScale: 3.4 }, // Wide Outer Halo
+          { color: currentTheme.mid, blur: 16 * currentGlow, widthScale: 1.8 }, // Saturated Inner Stroke
+          {
+            color: currentTheme.primary,
+            blur: 6 * currentGlow,
+            widthScale: 1.1,
+          }, // Vibrant Neon Center
+          { color: "#ffffff", blur: 2 * currentGlow, widthScale: 0.6 }, // Hot Laser Core
+        ];
+
+        passes.forEach((pass) => {
+          ctx.save();
+          ctx.shadowColor = currentTheme.primary;
+          ctx.shadowBlur = pass.blur;
+          ctx.strokeStyle = pass.color;
+          ctx.lineCap = "round";
+          ctx.lineJoin = "round";
+
+          for (let i = 0; i < totalPaths; i++) {
+            if (i > activePathCount) break;
+
+            const pathProgress = Math.min(1, activePathCount - i);
+            const item = rosePaths[i];
+            const pts = item.points;
+
+            ctx.lineWidth = item.weight * pass.widthScale;
+
+            const transform = (nx, ny) => {
+              const px =
+                centerX + (nx + mouse.tiltX * 0.08 * (ny + 0.3)) * scale;
+              const py = centerY + (ny + mouse.tiltY * 0.08 * nx) * scale;
+              return { x: px, y: py };
+            };
+
+            let p0, cp1, cp2, p1;
+
+            if (pts.length === 8) {
+              p0 = transform(pts[0], pts[1]);
+              cp1 = transform(pts[2], pts[3]);
+              cp2 = transform(pts[4], pts[5]);
+              p1 = transform(pts[6], pts[7]);
+            } else if (pts.length === 6) {
+              p0 = transform(pts[0], pts[1]);
+              cp1 = transform(pts[2], pts[3]);
+              cp2 = transform((pts[2] + pts[4]) / 2, (pts[3] + pts[5]) / 2);
+              p1 = transform(pts[4], pts[5]);
+            }
+
+            ctx.beginPath();
+            ctx.moveTo(p0.x, p0.y);
+
+            if (pathProgress < 1.0) {
+              const sub = getBezierPoint(
+                pathProgress,
+                p0.x,
+                p0.y,
+                cp1.x,
+                cp1.y,
+                cp2.x,
+                cp2.y,
+                p1.x,
+                p1.y,
+              );
+              ctx.quadraticCurveTo(cp1.x, cp1.y, sub.x, sub.y);
+            } else {
+              ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, p1.x, p1.y);
+            }
+
+            ctx.stroke();
+          }
+          ctx.restore();
+        });
+
+        requestAnimationFrame(drawScene);
+      }
+
+      replayBtn.addEventListener("click", () => {
+        progress = 0;
+        isAnimating = true;
+      });
+
+      pulseBtn.addEventListener("click", () => {
+        pulseEnabled = !pulseEnabled;
+        pulseStatus.textContent = `Pulse: ${pulseEnabled ? "ON" : "OFF"}`;
+        pulseBtn.classList.toggle("active", pulseEnabled);
+      });
+
+      particlesBtn.addEventListener("click", () => {
+        particlesEnabled = !particlesEnabled;
+        particlesStatus.textContent = `Embers: ${particlesEnabled ? "ON" : "OFF"}`;
+        particlesBtn.classList.toggle("active", particlesEnabled);
+      });
+
+      toggleHudBtn.addEventListener("click", () => {
+        hudPanel.classList.toggle("collapsed");
+      });
+
+      // Theme Swatches Listener
+      document.querySelectorAll(".color-swatch").forEach((swatch) => {
+        swatch.addEventListener("click", () => {
+          document
+            .querySelectorAll(".color-swatch")
+            .forEach((s) => s.classList.remove("active"));
+          swatch.classList.add("active");
+
+          currentThemeKey = swatch.dataset.theme;
+          currentTheme = THEMES[currentThemeKey];
+
+          // Update Ambient Halo & Title Colors
+          ambientHalo.style.background = currentTheme.halo;
+          roseTitle.style.color = currentTheme.titleColor;
+        });
+      });
+
+      exportBtn.addEventListener("click", () => {
+        const link = document.createElement("a");
+        link.download = `hyperion-neon-rose-${currentThemeKey}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      });
+
+      window.onload = () => {
+        drawScene();
+      };
     </script>
-</body>
+  </body>
 </html>
